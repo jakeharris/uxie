@@ -1,0 +1,30 @@
+{
+  "name": "uxie",
+  "version": "1.0.0",
+  "description": "A UX data collection sprite.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javakat/uxie.git"
+  },
+  "keywords": [
+    "ux",
+    "analysis",
+    "data-collection"
+  ],
+  "author": "Jake Harris (milieu@javakat.io)",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/javakat/uxie/issues"
+  },
+  "homepage": "https://github.com/javakat/uxie#readme",
+  "devDependencies": {
+    "mocha": "^2.3.4"
+  }
+}
