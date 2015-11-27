@@ -1,10 +1,13 @@
 var assert = require('assert'),
     Event = require('../src/event'),
-    EventType = require('../src/event-type')
+    EventType = require('../src/event-type'),
+    ParameterCountError = require('../src/errors').ParameterCountError,
+    NotImplementedError = require('../src/errors').NotImplementedError
 
 describe('Event', function () {
+  var et
   beforeEach(function () {
-    var et = new EventType('mouse', ['click', 'touch'])
+    et = new EventType('mouse', ['click', 'touch'])
   })
   context('constructor', function () {
     // sad paths
@@ -25,7 +28,8 @@ describe('Event', function () {
       }, NotImplementedError)
     })
     it('throws a NotImplementedError if the supplied EventType has no save() function', function () {
-      delete et.save
+      et.save = null
+      // test this with the delete keyword later
       assert.throws(function () {
         var e = new Event(et)
       }, NotImplementedError)
@@ -49,12 +53,12 @@ describe('Event', function () {
       assert(et.save === e.save)
     })
   })
-  context('record', function () {
+  context('record()', function () {
     it('is a function', function () {
       assert('function' === typeof(new Event(et).record))
     })
   })
-  context('save', function () {
+  context('save()', function () {
     it('is a function', function () {
       assert('function' === typeof(new Event(et).save))
     })

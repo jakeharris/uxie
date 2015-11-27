@@ -1,5 +1,6 @@
 var assert = require('assert'),
-    EventType = require('../src/event-type')
+    EventType = require('../src/event-type'),
+    ParameterCountError = require('../src/errors').ParameterCountError
 
 describe('EventType', function () {
   context('constructor', function () {
@@ -36,11 +37,21 @@ describe('EventType', function () {
     it('is a function', function () {
       assert('function' === typeof(new EventType('mouse', ['click', 'hover']).record))
     })
+    it('throws an Error if it is called', function () {
+      assert.throws(function () {
+        new EventType('mouse', ['click', 'hover']).record()
+      })
+    })
     // the above is all we can really check meaningfully. it's an arbitrary callback
   })
   context('save()', function () {
     it('is a function', function () {
       assert('function' === typeof(new EventType('mouse', ['click', 'hover']).save))
+    })
+    it('throws an Error if it is called', function () {
+      assert.throws(function () {
+        new EventType('mouse', ['click', 'hover']).save()
+      })
     })
     // the above is all we can really check meaningfully. it's an arbitrary callback
   })
