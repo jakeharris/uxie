@@ -17,6 +17,11 @@ function Configuration (types, url) {
   if(url === undefined)
     url = 'http://localhost'
   
+  // function checkForTypes(types)
+  // ===
+  // inputs: types (array of EventType objects)
+  // outputs: nothing.
+  // breaks-if: there are no contents in the types array.
   var checkForTypes = function (types) {
         var anyTypes = false
         for(var t in types)
@@ -25,6 +30,15 @@ function Configuration (types, url) {
              
         if(!anyTypes) throw new TypeError('List of event types must contain at least one EventType.')
       },
+      
+  // function checkForTriggerConflicts(types)
+  // ===
+  // inputs: types (array of EventType objects)
+  // outputs: nothing.
+  // breaks-if: more than one EventType is registered to the same trigger.
+  // ===
+  // NOTES: I'm aware this is O(n^3). If you have more than 20 types of events 
+  // running, though, I'm shocked.
       checkForTriggerConflicts = function (types) {
         var isTriggerConflict = false,
             triggers = []
@@ -36,7 +50,6 @@ function Configuration (types, url) {
               else 
                 for(var doneTrigger in triggers)
                   if(types[t].triggers[trigger] == triggers[doneTrigger])
-                    
                     throw new TriggerConflictError('Some EventTypes have conflicting triggers. Trigger list: \n' + triggers.toString() + ',\n offending EventType: \n' + types[t].toString())
                   else
                     triggers.push(types[t].triggers[trigger])

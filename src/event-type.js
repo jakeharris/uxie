@@ -3,6 +3,7 @@ module.exports = EventType
 
 var ParameterCountError = require('./errors').ParameterCountError
 
+// It is best to think of an EventType as a factory for Events.
 function EventType(name, triggers) {
   if(name === undefined) throw new ParameterCountError('Name must be supplied.')
   if(typeof(name) !== 'string') throw new TypeError('Name must be a string.')
