@@ -1,10 +1,10 @@
 'using strict';
-module.exports = EventType
+module.exports = DefaultEventTypesFactory
 
-var ParameterCountError = require('./errors').ParameterCountError
+var ParameterCountError = require('../errors').ParameterCountError,
+    EventFactory = require('./event-factory')
 
-// It is best to think of an EventType as a factory for Events.
-function EventType(name, triggers) {
+function DefaultEventTypesFactory(name, triggers) {
   if(name === undefined) throw new ParameterCountError('Name must be supplied.')
   if(typeof(name) !== 'string') throw new TypeError('Name must be a string.')
   if(triggers === undefined) throw new ParameterCountError('Trigger list must be supplied.')
@@ -14,17 +14,20 @@ function EventType(name, triggers) {
   this.triggers = triggers
 }
 
-EventType.prototype.record = function () {
-  if(this.constructor.name === 'EventType') {
+DefaultEventTypesFactory.prototype.record = function () {
+  if(this.constructor.name === 'DefaultEventTypesFactory') {
     throw new Error('This method is only stored here; it should be copied to an Event object for actual use.') 
   }
   
   this.startTime = new Date().now
 }
-EventType.prototype.save = function () {
-  if(this.constructor.name === 'EventType') {
+DefaultEventTypesFactory.prototype.save = function () {
+  if(this.constructor.name === 'DefaultEventTypesFactory') {
     throw new Error('This method is only stored here; it should be copied to an Event object for actual use.') 
   }
   
   this.endTime = new Date().now
 }
+
+DefaultEventTypesFactory.prototype = Object.create(EventFactory.prototype)
+DefaultEventTypesFactory.prototype.constructor = EventFactory
