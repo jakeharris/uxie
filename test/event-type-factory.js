@@ -34,7 +34,7 @@ describe('EventTypeFactory', function () {
       assert.doesNotThrow(function () {
         factory.generate()
       })
-      var types = factory.generate(triggerMap)
+      var types = factory.generate()
       assert(types instanceof Array)
     })
     it('stores the generated array for quicker access later', function () {
