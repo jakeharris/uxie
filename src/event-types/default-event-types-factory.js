@@ -2,7 +2,8 @@
 module.exports = DefaultEventTypesFactory
 
 var ParameterCountError = require('../errors').ParameterCountError,
-    EventFactory = require('./event-factory')
+    EventFactory = require('./event-factory'),
+    Event = require('../event')
 
 // TODO: write tests to make this make sense
 // we'll take in a list of trigger names for which 
@@ -12,6 +13,9 @@ var ParameterCountError = require('../errors').ParameterCountError,
 function DefaultEventTypesFactory() {
   
 }
+
+DefaultEventTypesFactory.prototype = Object.create(EventFactory.prototype)
+DefaultEventTypesFactory.prototype.constructor = DefaultEventTypesFactory
 
 DefaultEventTypesFactory.prototype.record = function () {
   if(this.constructor.name === 'DefaultEventTypesFactory') {
@@ -27,6 +31,10 @@ DefaultEventTypesFactory.prototype.save = function () {
   
   this.endTime = new Date().now
 }
-
-DefaultEventTypesFactory.prototype = Object.create(EventFactory.prototype)
-DefaultEventTypesFactory.prototype.constructor = EventFactory
+// TODO: add user id generation
+DefaultEventTypesFactory.prototype.generate = function () {
+  var event = new Event()
+  event.save = this.save
+  event.record = this.record
+  return event
+}
