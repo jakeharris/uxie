@@ -1,7 +1,8 @@
 'using strict';
 module.exports = EventTypeFactory
 
-var ParameterCountError = require('../errors').ParameterCountError
+var ParameterCountError = require('../errors').ParameterCountError,
+    DefaultEventTypesFactory = require('./default-event-types-factory')
 
 // I'm sure this is confusing, but it was necessary for leaving this customizable.
 
@@ -19,19 +20,25 @@ var DEFAULT_TYPE_MAP = {
   ]
 }
 
-function EventTypeFactory(typeMap, customTypes) {
+function EventTypeFactory (typeMap, customTypes) {
   if(typeof typeMap === 'undefined')
     this.typeMap = DEFAULT_TYPE_MAP
-  else 
+  else if (typeof customTypes === 'undefined') 
+    throw new ParameterCountError('Because a custom type map is supplied, you must also supply an array containing constructors for your custom types.')
+  else if (typeof typeMap !== 'object')
+    throw new TypeError('The type map must be a traditional Javascript object.')
+  else
     this.typeMap = typeMap
-  
-  validateTypeMap()
 }
+
+EventTypeFactory.prototype = Object.create(Object.prototype)
+EventTypeFactory.prototype.constructor = EventTypeFactory
 
 // Returns an array of all required EventFactories.
 EventTypeFactory.prototype.generate = function () {
-  for(var type in this.typeMap) {
-    
-  }
+  if(this.typeMap === DEFAULT_TYPE_MAP)
+    return [ new DefaultEventTypesFactory() ]
 }
-
+EventTypeFactory.prototype.validateTypeMap = function () {
+  
+}
