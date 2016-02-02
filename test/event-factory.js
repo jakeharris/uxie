@@ -5,7 +5,7 @@ var assert = require('assert'),
 describe('EventFactory', function () {
   context('constructor', function () {
     it('throws an error if the constructor is run, because it is abstract', function () {
-      assert.throws(new EventFactory(), NotImplementedError)
+      assert.throws(function () { new EventFactory() }, NotImplementedError)
     })
   })
 })

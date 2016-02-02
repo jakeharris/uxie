@@ -6,19 +6,21 @@ var assert = require('assert'),
 describe('EventTypeFactory', function () {
   context('constructor', function () {
     it('throws a ParameterCountError if there is only one input parameter', function () {
-      assert.throws(new EventTypeFactory(4), ParameterCountError)
+      assert.throws(function () { new EventTypeFactory(4) }, ParameterCountError)
     })
     it('throws a TypeError if the input type map is not an object', function () {
-      assert.throws(new EventTypeFactory(4, null), TypeError)
+      assert.throws(function () { new EventTypeFactory(4, null) }, TypeError)
     })
     it('throws a SyntaxError if the input type map contains mappings to non-existent event types', function () {
-      assert.throws(new EventTypeFactory({ "zombino": ["click"] }, null), SyntaxError)
+      assert.throws(function () { new EventTypeFactory({ "zombino": ["click"] }, null) }, SyntaxError)
     })
     it('throws a TypeError if the customTypes object is not an array of constructors', function () {
-      assert.throws(new EventTypeFactory({ "default": [ "click", "touch", "hover", "scroll", "wait" ] }, 4), TypeError)
+      assert.throws(function () {
+        new EventTypeFactory({ "default": [ "click", "touch", "hover", "scroll", "wait" ] }, 4)
+      }, TypeError)
     })
     it('succeeds if there is no input type map, and so it uses the defaults', function () {
-      assert.doesNotThrow(new EventTypeFactory())
+      assert.doesNotThrow(function () { new EventTypeFactory() })
       var factory = new EventTypeFactory()
       assert(factory.prototype.name === 'EventTypeFactory')
     })
