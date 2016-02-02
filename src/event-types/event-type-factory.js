@@ -36,9 +36,10 @@ EventTypeFactory.prototype.constructor = EventTypeFactory
 
 // Returns an array of all required EventFactories.
 EventTypeFactory.prototype.generate = function () {
+  var factories = []
   if(this.typeMap === DEFAULT_TYPE_MAP)
-    return [ new DefaultEventTypesFactory() ]
-}
-EventTypeFactory.prototype.validateTypeMap = function () {
-  
+    factories = [ new DefaultEventTypesFactory() ]
+    
+  this.types = factories
+  return this.types
 }
