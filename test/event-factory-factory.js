@@ -1,6 +1,7 @@
 var assert = require('assert'),
     EventFactoryFactory = require('../src/event-types/event-factory-factory'),
     TemporalEventFactory = require('../src/event-types/temporal-event-factory').TemporalEventFactory,
+    PhysicalEventFactory = require('../src/event-types/physical-event-factory').PhysicalEventFactory,
     ParameterCountError = require('../src/errors').ParameterCountError
 
 describe('EventFactoryFactory', function () {
@@ -29,7 +30,7 @@ describe('EventFactoryFactory', function () {
     it('throws an Error if it fails to find any user-defined types mandated by the type map')
   })
   context('generate()', function () {
-    it('generates an array containing only a TemporalEventFactory if no type map is supplied to the constructor', function () {
+    it('generates an array containing only a TemporalEventFactory and a PhysicalEventFactory if no type map is supplied to the constructor', function () {
       var factory = new EventFactoryFactory()
       assert.doesNotThrow(function () {
         factory.generate()
@@ -37,6 +38,8 @@ describe('EventFactoryFactory', function () {
       var types = factory.generate()
       assert(types instanceof Map)
       assert(types['temporal'] === TemporalEventFactory)
+      assert(types['physical'] === PhysicalEventFactory)
+      assert(types.size === 2)
     })
     it('stores the generated array for quicker access later', function () {
       var factory = new EventFactoryFactory()
