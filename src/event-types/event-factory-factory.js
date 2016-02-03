@@ -33,13 +33,10 @@ EventFactoryFactory.prototype.constructor = EventFactoryFactory
 
 // Returns an array of all required EventFactories.
 EventFactoryFactory.prototype.generate = function () {
-  var factories = new Map()
+  var factories = {}
   
-  for(var k in this.typeMap) {
-    factories.set(k, new this.typeMap[k]())
-  }
-  
-  console.log(factories.size)
+  for(var k in this.typeMap)
+    factories[k] = new this.typeMap[k]()
   
   this.types = factories
   return this.types
