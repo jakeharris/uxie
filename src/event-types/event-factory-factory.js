@@ -2,7 +2,8 @@
 module.exports = EventFactoryFactory
 
 var ParameterCountError = require('../errors').ParameterCountError,
-    TemporalEventFactory = require('./temporal-event-factory')
+    TemporalEventFactory = require('./temporal-event-factory'),
+    PhysicalEventFactory = require('./physical-event-factory')
 
 // I'm sure this is confusing, but it was necessary for leaving this customizable.
 
@@ -14,11 +15,11 @@ var ParameterCountError = require('../errors').ParameterCountError,
 
 // You should need nothing here unless you are trying to create custom event handlers.
 
-var DEFAULT_TYPE_MAP = new Map().set('temporal', TemporalEventFactory)
+var DEFAULT_TYPE_MAP = { 'temporal': TemporalEventFactory, 'physical': PhysicalEventFactory }
 
 function EventFactoryFactory (typeMap, customTypes) {
   if(typeof typeMap === 'undefined')
-    this.typeList = DEFAULT_TYPE_MAP
+    this.typeMap = DEFAULT_TYPE_MAP
   else if (typeof customTypes === 'undefined') 
     throw new ParameterCountError('Because a custom type map is supplied, you must also supply an array containing constructors for your custom types.')
   else if (typeof typeMap !== 'object')
@@ -33,9 +34,13 @@ EventFactoryFactory.prototype.constructor = EventFactoryFactory
 // Returns an array of all required EventFactories.
 EventFactoryFactory.prototype.generate = function () {
   var factories = new Map()
-  if(this.typeMap === DEFAULT_TYPE_MAP)
-    factories.set('temporal', new TemporalEventFactory())
-    
+  
+  for(var k in this.typeMap) {
+    factories.set(k, new this.typeMap[k]())
+  }
+  
+  console.log(factories.size)
+  
   this.types = factories
   return this.types
 }
