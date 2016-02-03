@@ -14,21 +14,17 @@ var ParameterCountError = require('../errors').ParameterCountError,
 
 // You should need nothing here unless you are trying to create custom event handlers.
 
-var DEFAULT_TYPE_MAP = {
-  "default": [
-    "click", "touch", "hover", "scroll", "wait"
-  ]
-}
+var DEFAULT_TYPE_LIST = [ 'temporal', 'physical' ]
 
-function EventTypeFactory (typeMap, customTypes) {
-  if(typeof typeMap === 'undefined')
-    this.typeMap = DEFAULT_TYPE_MAP
+function EventTypeFactory (typeList, customTypes) {
+  if(typeof typeList === 'undefined')
+    this.typeList = DEFAULT_TYPE_LIST
   else if (typeof customTypes === 'undefined') 
     throw new ParameterCountError('Because a custom type map is supplied, you must also supply an array containing constructors for your custom types.')
   else if (typeof typeMap !== 'object')
     throw new TypeError('The type map must be a traditional Javascript object.')
   else
-    this.typeMap = typeMap
+    this.typeList = typeList
 }
 
 EventTypeFactory.prototype = Object.create(Object.prototype)
@@ -37,7 +33,7 @@ EventTypeFactory.prototype.constructor = EventTypeFactory
 // Returns an array of all required EventFactories.
 EventTypeFactory.prototype.generate = function () {
   var factories = []
-  if(this.typeMap === DEFAULT_TYPE_MAP)
+  if(this.typeList === DEFAULT_TYPE_LIST)
     factories = [ new DefaultEventTypesFactory() ]
     
   this.types = factories
