@@ -29,7 +29,7 @@ PhysicalEventFactory.prototype.save = function (e) {
     throw new Error('This method is only stored here; it should be copied to an Event object for actual use.') 
   }
   
-  this.elementUp
+  this.elementUp = e
 }
 // TODO: add user id generation. perhaps to EventFactory prototype?
 PhysicalEventFactory.prototype.generate = function () {
