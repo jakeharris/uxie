@@ -31,7 +31,7 @@ DefaultEventTypesFactory.prototype.save = function () {
   
   this.endTime = new Date().now
 }
-// TODO: add user id generation
+// TODO: add user id generation. perhaps to EventFactory prototype?
 DefaultEventTypesFactory.prototype.generate = function () {
   var event = new Event()
   event.save = this.save
