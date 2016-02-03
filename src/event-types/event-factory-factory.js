@@ -1,40 +1,40 @@
 'using strict';
-module.exports = EventTypeFactory
+module.exports = EventFactoryFactory
 
 var ParameterCountError = require('../errors').ParameterCountError,
-    DefaultEventTypesFactory = require('./default-event-types-factory')
+    TemporalEventFactory = require('./temporal-event-factory')
 
 // I'm sure this is confusing, but it was necessary for leaving this customizable.
 
-// EventTypeFactories produce EventFactories. EventFactories produce Events.
-// EventTypeFactories figure out what kind of EventFactories to produce based on
+// EventFactoryFactories produce EventFactories. EventFactories produce Events.
+// EventFactoryFactories figure out what kind of EventFactories to produce based on
 // config.json. If one does not exist, it will use defaults (DefaultEventTypesFactory).
 // If you create a config.json, but would like to use the default handlers for certain kinds of
 // events, read the README/check out the Github.
 
 // You should need nothing here unless you are trying to create custom event handlers.
 
-var DEFAULT_TYPE_LIST = [ 'temporal', 'physical' ]
+var DEFAULT_TYPE_MAP = new Map().set('temporal', TemporalEventFactory)
 
-function EventTypeFactory (typeList, customTypes) {
-  if(typeof typeList === 'undefined')
-    this.typeList = DEFAULT_TYPE_LIST
+function EventFactoryFactory (typeMap, customTypes) {
+  if(typeof typeMap === 'undefined')
+    this.typeList = DEFAULT_TYPE_MAP
   else if (typeof customTypes === 'undefined') 
     throw new ParameterCountError('Because a custom type map is supplied, you must also supply an array containing constructors for your custom types.')
   else if (typeof typeMap !== 'object')
     throw new TypeError('The type map must be a traditional Javascript object.')
   else
-    this.typeList = typeList
+    this.typeMap = typeMap
 }
 
-EventTypeFactory.prototype = Object.create(Object.prototype)
-EventTypeFactory.prototype.constructor = EventTypeFactory
+EventFactoryFactory.prototype = Object.create(Object.prototype)
+EventFactoryFactory.prototype.constructor = EventFactoryFactory
 
 // Returns an array of all required EventFactories.
-EventTypeFactory.prototype.generate = function () {
-  var factories = []
-  if(this.typeList === DEFAULT_TYPE_LIST)
-    factories = [ new DefaultEventTypesFactory() ]
+EventFactoryFactory.prototype.generate = function () {
+  var factories = new Map()
+  if(this.typeMap === DEFAULT_TYPE_MAP)
+    factories.set('temporal', new TemporalEventFactory())
     
   this.types = factories
   return this.types
