@@ -29,22 +29,31 @@ describe('Uxie', function () {
         var uxie = new Uxie(opts)
       }, TypeError)
     })
-    it('throws a TypeError if opts.typeMap is supplied and valid, but opts.triggerMap is not an object', function () {
-      
-    })
-    it('throws a SyntaxError if opts.typeMap is supplied and valid, but opts.triggerMap is empty', function () {
-      var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP, triggerMap: {} }
+    it('throws a SyntaxError if opts.typeMap is supplied and valid, but opts.triggerMap is not supplied', function () {
+      var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP }
       assert.throws(function () {
         var uxie = new Uxie(opts)
       }, SyntaxError) 
     })
-    it('throws a SyntaxError if opts.typeMap is supplied and valid, but at least one provided event trigger is invalid', function () {
+    it('throws a TypeError if opts.typeMap is supplied and valid, but opts.triggerMap is not an object', function () {
+      var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP, triggerMap: 4 }
+      assert.throws(function () {
+        var uxie = new Uxie(opts)
+      }, TypeError) 
+    })
+    it('throws a TypeError if opts.typeMap is supplied and valid, but opts.triggerMap is empty', function () {
+      var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP, triggerMap: {} }
+      assert.throws(function () {
+        var uxie = new Uxie(opts)
+      }, TypeError) 
+    })
+    it('throws a TypeError if opts.typeMap is supplied and valid, but at least one provided event trigger is invalid', function () {
       var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP, triggerMap: { 'temporal': ['wait', 'scroll', 'water'] } }
       assert.throws(function () {
         var uxie = new Uxie(opts)
-      }, SyntaxError)  
+      }, TypeError)  
     })
-    it('throws a SyntaxError if opts.typeMap is supplied and valid, but opts.customTypes does not cover all types in the type map', function () {
+    it('throws a SyntaxError if opts.typeMap and opts.triggerMap are supplied and valid, but opts.customTypes does not cover all types in the type map', function () {
       var opts = { typeMap: {'temporal': TimeyWimeyFactory }, triggerMap: { 'temporal': ['wait', 'scroll']}, customTypes: [ TemporalEventFactory ]}
       assert.throws(function () {
         var uxie = new Uxie(opts)
@@ -66,7 +75,7 @@ describe('Uxie', function () {
       assert(uxie instanceof Uxie)
     })
     it('succeeds if valid parameters are supplied', function () {
-      var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP }
+      var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP, triggerMap: { 'temporal': ['wait', 'scroll']} }
       assert.doesNotThrow(function () {
         var uxie = new Uxie(opts)
       })
