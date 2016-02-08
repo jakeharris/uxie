@@ -76,5 +76,10 @@ describe('Uxie', function () {
       var uxie = new Uxie(opts)
       assert(uxie instanceof Uxie)
     })
+    it('creates an initial wait-type Event, if that is supported by the configuration', function () {
+      var uxie = new Uxie()
+      assert(uxie.currentEvent instanceof Event)
+      assert(uxie.currentEvent.save === new TemporalEventFactory().save)
+    })
   })
 })
