@@ -15,11 +15,9 @@ var ParameterCountError = require('../errors').ParameterCountError,
 
 // You should need nothing here unless you are trying to create custom event handlers.
 
-var DEFAULT_TYPE_MAP = { 'temporal': TemporalEventFactory, 'physical': PhysicalEventFactory }
-
 function EventFactoryFactory (typeMap, customTypes) {
   if(typeof typeMap === 'undefined')
-    this.typeMap = DEFAULT_TYPE_MAP
+    this.typeMap = EventFactoryFactory.DEFAULT_TYPE_MAP
   else if (typeof customTypes === 'undefined') 
     throw new ParameterCountError('Because a custom type map is supplied, you must also supply an array containing constructors for your custom types.')
   else if (typeof typeMap !== 'object')
@@ -41,3 +39,4 @@ EventFactoryFactory.prototype.generate = function () {
   this.types = factories
   return this.types
 }
+EventFactoryFactory.DEFAULT_TYPE_MAP = { 'temporal': TemporalEventFactory, 'physical': PhysicalEventFactory }
