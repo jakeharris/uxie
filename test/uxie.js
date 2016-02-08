@@ -53,12 +53,6 @@ describe('Uxie', function () {
         var uxie = new Uxie(opts)
       }, TypeError)  
     })
-    it('throws a SyntaxError if opts.typeMap and opts.triggerMap are supplied and valid, but opts.customTypes does not cover all types in the type map', function () {
-      var opts = { typeMap: {'temporal': TimeyWimeyFactory }, triggerMap: { 'temporal': ['wait', 'scroll']}, customTypes: [ TemporalEventFactory ]}
-      assert.throws(function () {
-        var uxie = new Uxie(opts)
-      }, SyntaxError) 
-    })
     it('succeeds if no parameters are supplied', function () {
       assert.doesNotThrow(function () {
         var uxie = new Uxie()
