@@ -1,7 +1,8 @@
 'using strict';
 module.exports = Uxie
 
-var EventFactoryFactory = require('./event-types/event-factory-factory')
+var EventFactoryFactory = require('./event-types/event-factory-factory'),
+    Event = require('./event')
 
 var TRIGGER_LIST = [ 'wait', 'scroll', 'click', 'touch', 'hover' ], // hover should ONLY be linked to very particular elements.
     DEFAULT_TRIGGER_MAP = {
@@ -27,6 +28,8 @@ function Uxie (opts) {
     this.eff = new EventFactoryFactory()
     this.triggerMap = DEFAULT_TRIGGER_MAP
   }
+  
+  
 }
 
 

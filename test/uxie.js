@@ -1,5 +1,6 @@
 var assert = require('assert'),
     Uxie = require('../src/uxie'),
+    Event = require('../src/event'),
     EventFactoryFactory = require('../src/event-types/event-factory-factory'),
     TemporalEventFactory = require('../src/event-types/temporal-event-factory')
 
