@@ -4,8 +4,7 @@ module.exports = Uxie
 var EventFactoryFactory = require('./event-types/event-factory-factory'),
     Event = require('./event')
 
-var TRIGGER_LIST = [ 'wait', 'scroll', 'click', 'touch', 'hover' ], // hover should ONLY be linked to very particular elements.
-    DEFAULT_TRIGGER_MAP = {
+var DEFAULT_TRIGGER_MAP = {
       'temporal': [
         'wait', 'scroll' 
       ],
@@ -14,22 +13,27 @@ var TRIGGER_LIST = [ 'wait', 'scroll', 'click', 'touch', 'hover' ], // hover sho
       ]
     }
 
-
 function Uxie (opts) {
   if(opts && opts.typeMap !== undefined) {
     // should only ever be run here. this function is just for keeping
     // things tidy, not really for code reuse.
     this.validateParameters(opts)
 
-    this.eff = new EventFactoryFactory(opts.typeMap, opts.customTypes)
+    this.factories = new EventFactoryFactory(opts.typeMap, opts.customTypes)
     this.triggerMap = opts.triggerMap
+    this.generateTriggerList()
   }
   else {
-    this.eff = new EventFactoryFactory()
+    this.factories = new EventFactoryFactory()
     this.triggerMap = DEFAULT_TRIGGER_MAP
+    this.generateTriggerList()
   }
   
+  this.factories.generate()
   
+  if(this.triggerList.indexOf('wait') !== -1) {
+    this.currentEvent = this.getFactoryFor('wait').generate()
+  }
 }
 
 
@@ -55,10 +59,6 @@ Uxie.prototype.validateParameters = function (opts) {
     throw new TypeError('opts.triggerMap must be a traditional JavaScript object. A value of type ' + typeof opts.triggerMap + ' was supplied.')
   if(Object.keys(opts.triggerMap).length === 0)
     throw new TypeError('opts.triggerMap was empty. Check out the Github if you need help writing a proper triggerMap.')
-  for(k in opts.triggerMap)
-    for(v in opts.triggerMap[k])
-      if(TRIGGER_LIST.indexOf(opts.triggerMap[k][v]) === -1)
-        throw new TypeError('opts.triggerMap contained a trigger name that we don\'t track.\nInvalid trigger name: ' + opts.triggerMap[k][v] + '\nList of valid trigger names: ' + TRIGGER_LIST)
 
   if(typeof opts.customTypes === 'undefined')
     opts.customTypes = []
@@ -67,5 +67,22 @@ Uxie.prototype.validateParameters = function (opts) {
       throw new SyntaxError('opts.typeMap contains a mapping to a custom EventFactory type, but the constructor for that type wasn\'t supplied in opts.customTypes.\nInvalid type name: ' + k + ' (' + opts.typeMap[k] + ')')
 }
 
-Uxie.TRIGGER_LIST = TRIGGER_LIST
+// Grab the trigger type's corresponding EventFactory
+Uxie.prototype.getFactoryFor = function (trigger) {
+  for(k in this.triggerMap)
+    for(v in this.triggerMap[k])
+      if(this.triggerMap[k][v] === trigger)
+        return this.factories.types[k]
+  throw new Error('Couldn\'t find an EventFactory for the given trigger.\nGiven trigger: ' + trigger + '\nTrigger map: ' + this.triggerMap)
+}
+
+// Generates the list of configured triggers for convenience.
+Uxie.prototype.generateTriggerList = function () {
+  this.triggerList = []
+  for(k in this.triggerMap)
+    for(v in this.triggerMap[k]) 
+      if(this.triggerList.indexOf(v) === -1)
+        this.triggerList.push(this.triggerMap[k][v])
+}
+
 Uxie.DEFAULT_TRIGGER_MAP = DEFAULT_TRIGGER_MAP
