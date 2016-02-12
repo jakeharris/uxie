@@ -48,12 +48,6 @@ describe('Uxie', function () {
         var uxie = new Uxie(opts)
       }, TypeError) 
     })
-    it('throws a TypeError if opts.typeMap is supplied and valid, but at least one provided event trigger is invalid', function () {
-      var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP, triggerMap: { 'temporal': ['wait', 'scroll', 'water'] } }
-      assert.throws(function () {
-        var uxie = new Uxie(opts)
-      }, TypeError)  
-    })
     it('succeeds if no parameters are supplied', function () {
       assert.doesNotThrow(function () {
         var uxie = new Uxie()
@@ -81,6 +75,11 @@ describe('Uxie', function () {
       var uxie = new Uxie()
       assert(uxie.currentEvent instanceof Event)
       assert(uxie.currentEvent.save === new TemporalEventFactory().save)
+    })
+    it('creates no initial Event if the configuration doesn\'t define a wait-type Event', function () {
+      var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP, triggerMap: { 'temporal': ['hover', 'scroll']} }
+      var uxie = new Uxie(opts)
+      assert(typeof uxie.currentEvent === 'undefined')
     })
   })
 })
