@@ -15,6 +15,8 @@ var ParameterCountError = require('../errors').ParameterCountError,
 
 // You should need nothing here unless you are trying to create custom event handlers.
 
+
+// A Factory for EventFactories! That's not confusing!
 function EventFactoryFactory (typeMap, customTypes) {
   if(typeof typeMap === 'undefined')
     this.typeMap = EventFactoryFactory.DEFAULT_TYPE_MAP
