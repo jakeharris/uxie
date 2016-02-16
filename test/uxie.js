@@ -30,6 +30,15 @@ describe('Uxie', function () {
         var uxie = new Uxie(opts)
       }, TypeError)
     })
+    it('throws a TypeError if opts.typeMap is supplied, but not all supplied types inherit EventFactory', function () {
+      var typeMap = EventFactoryFactory.DEFAULT_TYPE_MAP
+      typeMap.test = function Barnacle () { }
+      
+      var opts = { typeMap: typeMap }
+      assert.throws(function () {
+        var uxie = new Uxie(opts)
+      }, TypeError)
+    })
     it('throws a SyntaxError if opts.typeMap is supplied and valid, but opts.triggerMap is not supplied', function () {
       var opts = { typeMap: EventFactoryFactory.DEFAULT_TYPE_MAP }
       assert.throws(function () {
@@ -81,5 +90,6 @@ describe('Uxie', function () {
       var uxie = new Uxie(opts)
       assert(typeof uxie.currentEvent === 'undefined')
     })
+    it('sets up event handlers for each given trigger')
   })
 })
