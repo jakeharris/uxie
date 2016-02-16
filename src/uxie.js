@@ -21,14 +21,13 @@ function Uxie (opts) {
 
     this.factories = new EventFactoryFactory(opts.typeMap, opts.customTypes)
     this.triggerMap = opts.triggerMap
-    this.generateTriggerList()
   }
   else {
     this.factories = new EventFactoryFactory()
     this.triggerMap = DEFAULT_TRIGGER_MAP
-    this.generateTriggerList()
   }
-  
+    
+  this.generateTriggerList()
   this.factories.generate()
   
   if(this.triggerList.indexOf('wait') !== -1) {
