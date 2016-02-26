@@ -31,7 +31,9 @@ describe('Uxie', function () {
       }, TypeError)
     })
     it('throws a TypeError if opts.typeMap is supplied, but not all supplied types inherit EventFactory', function () {
-      var typeMap = EventFactoryFactory.DEFAULT_TYPE_MAP
+      var typeMap = {}
+      typeMap.temporal = EventFactoryFactory.DEFAULT_TYPE_MAP.temporal
+      typeMap.physical = EventFactoryFactory.DEFAULT_TYPE_MAP.physical
       typeMap.test = function Barnacle () { }
       
       var opts = { typeMap: typeMap }
