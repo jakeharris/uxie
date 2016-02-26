@@ -41,4 +41,6 @@ EventFactoryFactory.prototype.generate = function () {
   this.types = factories
   return this.types
 }
+
+// Contains default mappings for basic time-based and physical-interaction-based events.
 EventFactoryFactory.DEFAULT_TYPE_MAP = { 'temporal': TemporalEventFactory, 'physical': PhysicalEventFactory }
