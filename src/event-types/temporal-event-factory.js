@@ -1,4 +1,3 @@
-'using strict';
 module.exports = TemporalEventFactory
 
 var ParameterCountError = require('../errors').ParameterCountError,
@@ -7,7 +6,7 @@ var ParameterCountError = require('../errors').ParameterCountError,
 
 // Factory for the creation of time-based Events (waiting, etc.)
 function TemporalEventFactory() {
-  
+  'use strict';
 }
 
 TemporalEventFactory.prototype = Object.create(EventFactory.prototype)

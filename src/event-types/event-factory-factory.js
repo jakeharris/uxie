@@ -1,4 +1,3 @@
-'using strict';
 module.exports = EventFactoryFactory
 
 var ParameterCountError = require('../errors').ParameterCountError,
@@ -18,6 +17,7 @@ var ParameterCountError = require('../errors').ParameterCountError,
 
 // A Factory for EventFactories! That's not confusing!
 function EventFactoryFactory (typeMap, customTypes) {
+  'use strict';
   if(typeof typeMap === 'undefined')
     this.typeMap = EventFactoryFactory.DEFAULT_TYPE_MAP
   else if (typeof customTypes === 'undefined') 

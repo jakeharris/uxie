@@ -1,4 +1,3 @@
-'using strict';
 module.exports = PhysicalEventFactory
 
 var ParameterCountError = require('../errors').ParameterCountError,
@@ -7,7 +6,7 @@ var ParameterCountError = require('../errors').ParameterCountError,
 
 // Factory for the creation of location-based Events (clicking, hovering, etc.)
 function PhysicalEventFactory() {
-  
+  'use strict';
 }
 
 PhysicalEventFactory.prototype = Object.create(EventFactory.prototype)
