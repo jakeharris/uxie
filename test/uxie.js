@@ -1,4 +1,5 @@
 var assert = require('assert'),
+    sinon = require('sinon'),
     Uxie = require('../src/uxie'),
     Event = require('../src/event'),
     EventFactoryFactory = require('../src/event-types/event-factory-factory'),
@@ -92,6 +93,12 @@ describe('Uxie', function () {
       var uxie = new Uxie(opts)
       assert(typeof uxie.currentEvent === 'undefined')
     })
-    it('sets up event handlers for each given trigger')
+    it('sets up event handlers for each default trigger', function () {
+      var window = { addEventListener: function () { }}
+      sinon.stub(window, 'addEventListener')
+      
+      var uxie = new Uxie()
+      assert(window.addEventListener.callCount === uxie.triggerList.length)
+    })
   })
 })
