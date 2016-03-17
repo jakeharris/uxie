@@ -10,7 +10,7 @@ var DEFAULT_TRIGGER_MAP = {
         'wait', 'scroll' 
       ],
       'physical': [
-        'click', 'touch', 'hover'
+        'click', 'touch'
       ]
     }
 
@@ -121,7 +121,7 @@ Uxie.prototype.addEventListener = function (eventType) {
   window.addEventListener(eventType, function (e) {
     this.currentEvent.save(e)
     this.submit(this.currentEvent)
-    this.currentEvent = this.getFactoryTypeFor(eventType)
+    this.currentEvent = this.factories.getFactoryFor(this.getFactoryTypeFor(eventType)).generate()
     this.currentEvent.record(e)
   }.bind(this))
 }
@@ -131,7 +131,7 @@ Uxie.prototype.submit = function (event) {
     throw new ParameterCountError('Submission requires an Event.')
   if(!(event instanceof Event))
     throw new TypeError('Only submission of Events is allowed. Received: ' + event + ', which is not an instance of Event.')
-  
+    
   if(event.startTime !== undefined)
     console.log('Event runtime: ' + (event.endTime - event.startTime) + 'ms')
   else if (event.elementDown !== undefined)
