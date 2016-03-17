@@ -2,7 +2,8 @@ module.exports = Uxie
 
 var EventFactoryFactory = require('./event-types/event-factory-factory'),
     EventFactory = require('./event-types/event-factory'),
-    Event = require('./event')
+    Event = require('./event'),
+    ParameterCountError = require('./errors').ParameterCountError
 
 var DEFAULT_TRIGGER_MAP = {
       'temporal': [
@@ -29,10 +30,16 @@ function Uxie (opts) {
   }
     
   this.generateTriggerList()
+  this.generateTriggerDictionary()
   this.factories.generate()
   
   if(this.triggerList.indexOf('wait') !== -1) {
-    this.currentEvent = this.getFactoryFor('wait').generate()
+    this.currentEvent = this.factories.getFactoryFor(this.getFactoryTypeFor('wait')).generate()
+  }
+
+  for(var t in this.triggerList) {
+    var eventType = this.triggerList[t]
+    this.addEventListener(eventType)
   }
 }
 
@@ -83,6 +90,40 @@ Uxie.prototype.generateTriggerList = function () {
     for(var v in this.triggerMap[k]) 
       if(this.triggerList.indexOf(v) === -1)
         this.triggerList.push(this.triggerMap[k][v])
+}
+
+// Generates a dictionary mapping event types to their factory types for convenience.
+Uxie.prototype.generateTriggerDictionary = function () {
+  this.triggerDictionary = {}
+  for(var k in this.triggerMap)
+    for(var v in this.triggerMap[k])
+      this.triggerDictionary[this.triggerMap[k][v]] = k
+}
+
+// Returns a string denoting the Factory that should handle this event type.
+Uxie.prototype.getFactoryTypeFor = function (type) {
+  if(type === undefined)
+    throw new ParameterCountError('An event type (string) must be supplied.')
+  if(typeof type !== 'string')
+    throw new TypeError('The given type must be a string. Received: ' + typeof type + '.')
+  if(this.triggerList.indexOf(type) === -1)
+    throw new Error('No event type with that name exists. Received: ' + type + '.')
+    
+  return this.triggerDictionary[type]
+}
+
+// Add an event listener to the window object.
+Uxie.prototype.addEventListener = function (eventType) {
+  // we're gonna dummy the window object if it doesn't exist. otherwise
+  // this isn't very helpful ;)
+  if(window === undefined) 
+    var window = { addEventListener: function (eventType, handler) {} }
+  window.addEventListener(eventType, function () {
+    this.currentEvent.save()
+    this.submit(this.currentEvent)
+    this.currentEvent = this.getFactoryTypeFor(eventType)
+    this.currentEvent.record()
+  }.bind(this))
 }
 
 Uxie.DEFAULT_TRIGGER_MAP = DEFAULT_TRIGGER_MAP
