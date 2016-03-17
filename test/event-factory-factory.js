@@ -48,4 +48,40 @@ describe('EventFactoryFactory', function () {
     })
     it('generates an array containing all relevant EventFactories if a type map and custom types are supplied')
   })
+  context('getFactoryFor()', function () {
+    it('throws a ParameterCountError if no type parameter is supplied', function () {
+      var factory = new EventFactoryFactory()
+      factory.generate()
+      
+      assert.throws(function () {
+        factory.getFactoryFor()
+      }, ParameterCountError)
+    })
+    it('throws a TypeError if the supplied type parameter is not a string', function () {
+      var factory = new EventFactoryFactory()
+      factory.generate()
+      
+      assert.throws(function () {
+        factory.getFactoryFor(4)
+      }, TypeError)
+    })
+    it('throws an Error if the supplied type parameter is a string, but our type map doesn\'t contain it', function () {
+      var factory = new EventFactoryFactory()
+      factory.generate()
+      
+      assert.throws(function () {
+        factory.getFactoryFor('baka gaijin')
+      }, Error)
+    })
+    it('returns the EventFactory tied to the given type string', function () {
+      var factory = new EventFactoryFactory()
+      factory.generate()
+      
+      assert.doesNotThrow(function () {
+        factory.getFactoryFor('temporal')
+      })
+      
+      assert(factory.getFactoryFor('temporal') instanceof TemporalEventFactory)
+    }
+  })
 })
