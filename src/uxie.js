@@ -118,12 +118,24 @@ Uxie.prototype.addEventListener = function (eventType) {
   // this isn't very helpful ;)
   if(window === undefined) 
     var window = { addEventListener: function (eventType, handler) {} }
-  window.addEventListener(eventType, function () {
-    this.currentEvent.save()
+  window.addEventListener(eventType, function (e) {
+    this.currentEvent.save(e)
     this.submit(this.currentEvent)
     this.currentEvent = this.getFactoryTypeFor(eventType)
-    this.currentEvent.record()
+    this.currentEvent.record(e)
   }.bind(this))
+}
+
+Uxie.prototype.submit = function (event) {
+  if(event === undefined) 
+    throw new ParameterCountError('Submission requires an Event.')
+  if(!(event instanceof Event))
+    throw new TypeError('Only submission of Events is allowed. Received: ' + event + ', which is not an instance of Event.')
+  
+  if(event.startTime !== undefined)
+    console.log('Event runtime: ' + (event.endTime - event.startTime) + 'ms')
+  else if (event.elementDown !== undefined)
+    console.log('Event triggered on: \n' + event.elementDown + '\n and was released on: ' + event.elementUp)
 }
 
 Uxie.DEFAULT_TRIGGER_MAP = DEFAULT_TRIGGER_MAP
