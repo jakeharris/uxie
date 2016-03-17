@@ -42,5 +42,17 @@ EventFactoryFactory.prototype.generate = function () {
   return this.types
 }
 
+// Returns the factory for the given type string, if one is mapped.
+EventFactoryFactory.prototype.getFactoryFor = function (type) {
+  if(type === undefined) 
+    throw new ParameterCountError('A type (string) must be supplied.')
+  if(typeof type !== 'string')
+    throw new TypeError('The type name must be a string. Received: ' + typeof type + '.')
+  if(this.typeMap[type] === undefined)
+    throw new Error('No factory exists of the given type. Received: ' + type + '.')
+    
+  return this.types[type]
+}
+
 // Contains default mappings for basic time-based and physical-interaction-based events.
 EventFactoryFactory.DEFAULT_TYPE_MAP = { 'temporal': TemporalEventFactory, 'physical': PhysicalEventFactory }
