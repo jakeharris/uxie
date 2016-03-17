@@ -42,14 +42,15 @@ EventFactoryFactory.prototype.generate = function () {
   return this.types
 }
 
-// Returns the factory for the given type string, if one is mapped.
+// Returns the factory for the given event type, if one is mapped.
+// e.g. 'temporal', 'physical'; NOT 'wait', 'click'
 EventFactoryFactory.prototype.getFactoryFor = function (type) {
   if(type === undefined) 
-    throw new ParameterCountError('A type (string) must be supplied.')
+    throw new ParameterCountError('An event type (string) must be supplied.')
   if(typeof type !== 'string')
-    throw new TypeError('The type name must be a string. Received: ' + typeof type + '.')
+    throw new TypeError('The event type name must be a string. Received: ' + typeof type + '.')
   if(this.typeMap[type] === undefined)
-    throw new Error('No factory exists of the given type. Received: ' + type + '.')
+    throw new Error('No factory exists of the given event type. Received: ' + type + '.')
     
   return this.types[type]
 }
