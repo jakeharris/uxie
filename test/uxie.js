@@ -129,4 +129,32 @@ describe('Uxie', function () {
       assert.equal(uxie.getFactoryTypeFor('wait'), 'temporal')
     })
   })
+  context('submit()', function () {
+    it('throws a ParameterCountError if no event is supplied', function () {
+      var uxie = new Uxie()
+      
+      assert.throws(function () {
+        uxie.submit()
+      }, ParameterCountError)
+    })
+    it('throws a TypeError if the supplied parameter is not an Event', function () {
+      var uxie = new Uxie()
+      
+      assert.throws(function () {
+        uxie.submit(4)
+      })
+    })
+    it('prints the Event\'s contents to the console if it worked', function () {
+      var stub = sinon.stub(console, 'log')
+      
+      var e = new TemporalEventFactory().generate()
+      e.record()
+      var uxie = new Uxie()
+      e.save()
+      uxie.submit(e)
+      
+      stub.restore()
+      sinon.assert.calledOnce(stub)
+    })
+  })
 })
