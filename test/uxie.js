@@ -98,7 +98,35 @@ describe('Uxie', function () {
       sinon.stub(window, 'addEventListener')
       
       var uxie = new Uxie()
-      assert(window.addEventListener.callCount === uxie.triggerList.length)
+      console.log(window.addEventListener.callCount)
+      assert.equal(window.addEventListener.callCount, uxie.triggerList.length)
+    })
+  })
+  context('getFactoryTypeFor()', function () {
+    it('throws a ParameterCountError if no event type is supplied', function () {
+      var uxie = new Uxie()
+      assert.throws(function () {
+        uxie.getFactoryTypeFor()
+      }, ParameterCountError)
+    })
+    it('throws a TypeError if type is not a string', function () {
+      var uxie = new Uxie()
+      assert.throws(function () {
+        uxie.getFactoryTypeFor(4)
+      }, TypeError)
+    })
+    it('throws an Error if the given event type is not in the trigger map', function () {
+      var uxie = new Uxie()
+      assert.throws(function () {
+        uxie.getFactoryTypeFor('senpai...')
+      }, Error)
+    })
+    it('returns a string denoting the broader type of event the given event type belongs to', function () {
+      var uxie = new Uxie()
+      assert.doesNotThrow(function () {
+        uxie.getFactoryTypeFor('wait')
+      })
+      assert.equal(uxie.getFactoryTypeFor('wait'), 'temporal')
     })
   })
 })
