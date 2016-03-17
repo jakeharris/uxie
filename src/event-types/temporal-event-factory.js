@@ -16,15 +16,14 @@ TemporalEventFactory.prototype.record = function () {
   if(this.constructor.name === 'TemporalEventFactory') {
     throw new Error('This method is only stored here; it should be copied to an Event object for actual use.') 
   }
-  
-  this.startTime = new Date().now
+  this.startTime = new Date().getTime()
 }
 TemporalEventFactory.prototype.save = function () {
   if(this.constructor.name === 'TemporalEventFactory') {
     throw new Error('This method is only stored here; it should be copied to an Event object for actual use.') 
   }
   
-  this.endTime = new Date().now
+  this.endTime = new Date().getTime()
 }
 // TODO: add user id generation. perhaps to EventFactory prototype?
 TemporalEventFactory.prototype.generate = function () {
