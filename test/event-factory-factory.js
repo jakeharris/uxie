@@ -82,6 +82,6 @@ describe('EventFactoryFactory', function () {
       })
       
       assert(factory.getFactoryFor('temporal') instanceof TemporalEventFactory)
-    }
+    })
   })
 })
