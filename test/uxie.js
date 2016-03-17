@@ -3,7 +3,8 @@ var assert = require('assert'),
     Uxie = require('../src/uxie'),
     Event = require('../src/event'),
     EventFactoryFactory = require('../src/event-types/event-factory-factory'),
-    TemporalEventFactory = require('../src/event-types/temporal-event-factory')
+    TemporalEventFactory = require('../src/event-types/temporal-event-factory'),
+    ParameterCountError = require('../src/errors').ParameterCountError
 
 describe('Uxie', function () {
   context('constructor', function () {
@@ -94,12 +95,11 @@ describe('Uxie', function () {
       assert(typeof uxie.currentEvent === 'undefined')
     })
     it('sets up event handlers for each default trigger', function () {
-      var window = { addEventListener: function () { }}
-      sinon.stub(window, 'addEventListener')
+      var spy = sinon.spy()
+      Uxie.prototype.addEventListener = spy
       
       var uxie = new Uxie()
-      console.log(window.addEventListener.callCount)
-      assert.equal(window.addEventListener.callCount, uxie.triggerList.length)
+      assert.equal(uxie.addEventListener.callCount, uxie.triggerList.length)
     })
   })
   context('getFactoryTypeFor()', function () {
