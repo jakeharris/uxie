@@ -6,6 +6,8 @@ var assert = require('assert'),
     TemporalEventFactory = require('../src/event-types/temporal-event-factory'),
     ParameterCountError = require('../src/errors').ParameterCountError
 
+sinon.stub(Uxie.prototype, 'addEventListener') // because otherwise the code breaks when there is no window object
+
 describe('Uxie', function () {
   context('constructor', function () {
     it('throws a TypeError if opts.typeMap is supplied, but is not an object', function () {
@@ -158,3 +160,4 @@ describe('Uxie', function () {
     })
   })
 })
+
