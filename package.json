@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec",
+    "build": "browserify src/uxie.js -r ./src/uxie.js:Uxie -o dist/uxie.js"
   },
   "repository": {
     "type": "git",
