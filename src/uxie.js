@@ -114,10 +114,8 @@ Uxie.prototype.getFactoryTypeFor = function (type) {
 
 // Add an event listener to the window object.
 Uxie.prototype.addEventListener = function (eventType) {
-  // we're gonna dummy the window object if it doesn't exist. otherwise
+  // we're gonna assume the window object exists. otherwise
   // this isn't very helpful ;)
-  if(window === undefined) 
-    var window = { addEventListener: function (eventType, handler) {} }
   window.addEventListener(eventType, function (e) {
     this.currentEvent.save(e)
     this.submit(this.currentEvent)
@@ -134,8 +132,12 @@ Uxie.prototype.submit = function (event) {
     
   if(event.startTime !== undefined)
     console.log('Event runtime: ' + (event.endTime - event.startTime) + 'ms')
-  else if (event.elementDown !== undefined)
-    console.log('Event triggered on: \n' + event.elementDown + '\n and was released on: ' + event.elementUp)
+  else if (event.elementDown !== undefined) {
+    console.log('Event triggered on: \n')
+    console.log(event.elementDown)
+    console.log('\n and was released on: ') 
+    console.log(event.elementUp)
+  }
 }
 
 Uxie.DEFAULT_TRIGGER_MAP = DEFAULT_TRIGGER_MAP
