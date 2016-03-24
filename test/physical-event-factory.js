@@ -14,7 +14,7 @@ describe('PhysicalEventFactory', function () {
   context('generate()', function () {
     it('returns an Event object with the appropriate event handlers (save and record)', function () {
       var factory = new PhysicalEventFactory()
-      var event = factory.generate()
+      var event = factory.generate('wait')
       assert(event instanceof Event)
       assert(event.record === factory.record)
       assert(event.save   === factory.save  )

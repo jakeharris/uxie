@@ -27,9 +27,5 @@ TemporalEventFactory.prototype.save = function () {
 }
 // TODO: add user id generation. perhaps to EventFactory prototype?
 TemporalEventFactory.prototype.generate = function (type) {
-  var event = new Event()
-  event.type = type
-  event.save = this.save
-  event.record = this.record
-  return event
+  return new Event(type, this.record, this.save)
 }

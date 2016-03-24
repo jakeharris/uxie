@@ -139,7 +139,7 @@ describe('Uxie', function () {
     it('prints the Event\'s contents to the console if it worked', function () {
       var stub = sinon.stub(console, 'log')
       
-      var e = new TemporalEventFactory().generate()
+      var e = new TemporalEventFactory().generate('wait')
       e.record()
       var uxie = new Uxie()
       e.save()
