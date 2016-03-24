@@ -29,17 +29,20 @@ function Uxie (opts) {
     this.triggerMap = DEFAULT_TRIGGER_MAP
   }
     
+  
+  
   this.generateTriggerList()
   this.generateTriggerDictionary()
   this.factories.generate()
-  
-  if(this.triggerList.indexOf('wait') !== -1) {
-    this.currentEvent = this.factories.getFactoryFor(this.getFactoryTypeFor('wait')).generate()
-  }
 
   for(var t in this.triggerList) {
     var eventType = this.triggerList[t]
     this.addEventListener(eventType)
+  }
+  
+  if(this.triggerList.indexOf('wait') !== -1) {
+    this.waitInterval = 0 // just some integer so it exists
+    this.waitLength = Uxie.DEFAULT_WAIT_LENGTH
   }
 }
 
@@ -113,15 +116,24 @@ Uxie.prototype.getFactoryTypeFor = function (type) {
 }
 
 // Add an event listener to the window object.
-Uxie.prototype.addEventListener = function (eventType) {
+Uxie.prototype.addEventListener = function (eventType, handler) {
   // we're gonna assume the window object exists. otherwise
   // this isn't very helpful ;)
-  window.addEventListener(eventType, function (e) {
-    this.currentEvent.save(e)
-    this.submit(this.currentEvent)
-    this.currentEvent = this.factories.getFactoryFor(this.getFactoryTypeFor(eventType)).generate()
-    this.currentEvent.record(e)
-  }.bind(this))
+  
+  // because of this, this would be a good place for abstraction --
+  // if I/people think this tool could be useful for other things,
+  // we can allow an option to determine what global stuff we're using,
+  // if any, instead of the window object (event handler abstraction)
+  
+  // similarly, this is a good place to think about establishing
+  // an abstraction for *triggering* events, since they
+  // may not always be in-browser events, and they may be custom
+  // events in whatever environment they're run in...etc.
+
+  if(handler === undefined)
+    window.addEventListener(eventType, Uxie.DEFAULT_EVENT_LISTENER.bind(this, eventType))
+  else
+    window.addEventListener(eventType, handler.bind(this))
 }
 
 Uxie.prototype.submit = function (event) {
@@ -135,9 +147,23 @@ Uxie.prototype.submit = function (event) {
   else if (event.elementDown !== undefined) {
     console.log('Event triggered on: \n')
     console.log(event.elementDown)
-    console.log('\n and was released on: ') 
-    console.log(event.elementUp)
   }
 }
 
 Uxie.DEFAULT_TRIGGER_MAP = DEFAULT_TRIGGER_MAP
+Uxie.DEFAULT_EVENT_LISTENER = function (eventType, e) {
+  clearTimeout(this.waitInterval)
+  if(this.currentEvent !== undefined) {
+    this.currentEvent.save(e)
+    this.submit(this.currentEvent)
+  }
+  this.currentEvent = this.factories.getFactoryFor(this.getFactoryTypeFor(eventType)).generate(eventType)
+  this.currentEvent.record(e)
+  if(eventType !== 'wait') {
+    this.waitInterval = setTimeout(function () {
+      var we = this.factories.getFactoryFor(this.getFactoryTypeFor('wait')).generate('wait')
+      window.dispatchEvent(new CustomEvent('wait', { detail: we }))
+    }.bind(this), Uxie.DEFAULT_WAIT_LENGTH)
+  }
+}
+Uxie.DEFAULT_WAIT_LENGTH = 30 // in ms
