@@ -14,6 +14,6 @@ EventFactory.prototype.record = function () {
 EventFactory.prototype.save = function () {
   throw new NotImplementedError('This class is abstract by design. Extend this class (via proper use of prototypes -- see TemporalEventFactory for an example) if you want things to work out.')
 }
-EventFactory.prototype.generate = function () {
+EventFactory.prototype.generate = function (type) {
   throw new NotImplementedError('This class is abstract by design. Extend this class (via proper use of prototypes -- see TemporalEventFactory for an example) if you want things to work out.')
 }
