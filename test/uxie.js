@@ -99,6 +99,10 @@ describe('Uxie', function () {
       var uxie = new Uxie()
       assert.equal(uxie.addEventListener.callCount, uxie.triggerList.length)
     })
+    it('generates a valid user id', function () {
+      var uxie = new Uxie()
+      assert(typeof uxie.uid === 'string')
+    })
   })
   context('getFactoryTypeFor()', function () {
     it('throws a ParameterCountError if no event type is supplied', function () {
