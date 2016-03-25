@@ -145,9 +145,14 @@ describe('Uxie', function () {
     it('prints the Event\'s contents to the console if it worked', function () {
       var stub = sinon.stub(console, 'log')
       
-      var e = new TemporalEventFactory().generate('wait')
-      e.record()
       var uxie = new Uxie()
+      var e = uxie.factories.getFactoryFor(uxie.getFactoryTypeFor('wait')).generate('wait', uxie.uid)
+      e.record()
+      
+      // waste some time
+      for(var x = 0; x < 1000;)
+        x += Math.random()
+        
       e.save()
       uxie.submit(e)
       
