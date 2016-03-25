@@ -27,6 +27,6 @@ PhysicalEventFactory.prototype.save = function (e) {
   this.elementUp = e
 }
 // TODO: add user id generation. perhaps to EventFactory prototype?
-PhysicalEventFactory.prototype.generate = function (type) {
-  return new Event(type, this.record, this.save)
+PhysicalEventFactory.prototype.generate = function (type, uid) {
+  return new Event(type, this.record, this.save, uid)
 }
