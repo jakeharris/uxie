@@ -142,6 +142,8 @@ Uxie.prototype.addEventListener = function (eventType, handler) {
     window.addEventListener(eventType, handler.bind(this))
 }
 
+// Submit an event to the console/database/whatever.
+// Needs more flexibility.
 Uxie.prototype.submit = function (event) {
   if(event === undefined) 
     throw new ParameterCountError('Submission requires an Event.')
