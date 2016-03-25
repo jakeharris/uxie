@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha -R spec",
+    "test": "mocha -R min",
     "posttest": "browserify src/uxie.js -r ./src/uxie.js:Uxie -o dist/uxie.js"
   },
   "repository": {
