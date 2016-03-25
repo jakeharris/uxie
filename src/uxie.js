@@ -37,6 +37,7 @@ function Uxie (opts) {
   else
     this.submission = Uxie.DEFAULT_SUBMISSION_CONFIGURATION
   
+  this.generateUID()
   this.generateTriggerList()
   this.generateTriggerDictionary()
   this.factories.generate()
@@ -179,6 +180,27 @@ Uxie.prototype.submit = function (event) {
   
 }
 
+// Generate a user id for the session.
+// Used for building user stories in other tools.
+Uxie.prototype.generateUID = function () {
+  var canCookie = ((typeof document !== 'undefined') && (typeof document.cookie !== 'undefined'))
+  
+  // if we have access to cookies, read the UID cookie, if one exists.
+  // if one doesn't exist, generate one and save it in a cookie.
+  if(canCookie) {
+    var cookie = document.cookie.replace(/(?:(?:^|.*;\s*)uid\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+    if(cookie.length > 0)
+      this.uid = cookie
+    else this.uid = Math.random().toString(36).slice(2)
+  }
+  // if we don't have access to cookies, our user stories won't work
+  // very well, but we'll assume you have some other method of taking
+  // care of business.
+  else {
+    this.uid = Math.random().toString(36).slice(2)
+  }
+}
+
 Uxie.DEFAULT_TRIGGER_MAP = DEFAULT_TRIGGER_MAP
 Uxie.DEFAULT_SUBMISSION_CONFIGURATION = {
   'mode':'console'
@@ -190,13 +212,13 @@ Uxie.DEFAULT_EVENT_LISTENER = function (eventType, e) {
     this.currentEvent.save(e)
     this.submit(this.currentEvent)
   }
-  this.currentEvent = this.factories.getFactoryFor(this.getFactoryTypeFor(eventType)).generate(eventType)
+  this.currentEvent = this.factories.getFactoryFor(this.getFactoryTypeFor(eventType)).generate(eventType, this.uid)
   this.currentEvent.record(e)
   if(eventType !== 'wait') {
     this.waitInterval = setTimeout(function () {
-      var we = this.factories.getFactoryFor(this.getFactoryTypeFor('wait')).generate('wait')
+      var we = this.factories.getFactoryFor(this.getFactoryTypeFor('wait')).generate('wait', this.uid)
       window.dispatchEvent(new CustomEvent('wait', { detail: we }))
     }.bind(this), Uxie.DEFAULT_WAIT_LENGTH)
   }
 }
-Uxie.DEFAULT_WAIT_LENGTH = 30 // in ms
+Uxie.DEFAULT_WAIT_LENGTH = 50 // in ms (30ms was too small, as sometimes this elapses between scroll events on a rapid scroll)
