@@ -63,6 +63,12 @@ describe('Uxie', function () {
         var uxie = new Uxie(opts)
       }, TypeError) 
     })
+    it('throws a TypeError if opts.submission is supplied, but is not an object', function () {
+      var opts = { submission: 1 }
+      assert.throws(function () {
+        var uxie = new Uxie(opts)
+      }, TypeError)
+    })
     it('succeeds if no parameters are supplied', function () {
       assert.doesNotThrow(function () {
         var uxie = new Uxie()
