@@ -28,8 +28,14 @@ function Uxie (opts) {
     this.factories = new EventFactoryFactory()
     this.triggerMap = DEFAULT_TRIGGER_MAP
   }
-    
   
+  if(opts && opts.submission !== undefined)
+    if(typeof opts.submission !== 'object')
+      throw new TypeError('Submission configuration must be a formal object. Received: ' + typeof opts.submission)
+    else 
+      this.submission = opts.submission
+  else
+    this.submission = Uxie.DEFAULT_SUBMISSION_CONFIGURATION
   
   this.generateTriggerList()
   this.generateTriggerDictionary()
@@ -142,15 +148,40 @@ Uxie.prototype.submit = function (event) {
   if(!(event instanceof Event))
     throw new TypeError('Only submission of Events is allowed. Received: ' + event + ', which is not an instance of Event.')
     
-  if(event.startTime !== undefined)
-    console.log('Event runtime: ' + (event.endTime - event.startTime) + 'ms')
-  else if (event.elementDown !== undefined) {
-    console.log('Event triggered on: \n')
-    console.log(event.elementDown)
+  switch(this.submission.mode) {
+    case 'console':
+      if(event.startTime !== undefined)
+        console.log('Event (' + event.type + ') runtime: ' + (event.endTime - event.startTime) + 'ms')
+      else if (event.elementDown !== undefined) {
+        console.log('Event (' + event.type + ') triggered on: \n')
+        console.log(event.elementDown)
+      }
+      break;
+    case 'json-console':
+      console.log(JSON.stringify(event))
+      break;
+    case 'json':
+      var json = JSON.stringify(event),
+          xhr = new XMLHttpRequest()
+      
+      xhr.open('post', this.submission.url, true)
+      
+      xhr.setRequestHeader("content-type", "application/json")
+      xhr.setRequestHeader("content-length", json.length)
+      xhr.setRequestHeader("connection", "close")
+
+      xhr.timeout = 2000
+      
+      xhr.send()
   }
+  
 }
 
 Uxie.DEFAULT_TRIGGER_MAP = DEFAULT_TRIGGER_MAP
+Uxie.DEFAULT_SUBMISSION_CONFIGURATION = {
+  'mode':'console'
+}
+Uxie.SUPPORTED_SUBMISSION_MODES = [ 'console', 'json-console', 'json']
 Uxie.DEFAULT_EVENT_LISTENER = function (eventType, e) {
   clearTimeout(this.waitInterval)
   if(this.currentEvent !== undefined) {
