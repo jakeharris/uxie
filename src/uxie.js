@@ -157,7 +157,11 @@ Uxie.prototype.submit = function (event) {
         console.log('Event (' + event.type + ') runtime: ' + (event.endTime - event.startTime) + 'ms')
       else if (event.elementDown !== undefined) {
         console.log('Event (' + event.type + ') triggered on: \n')
-        console.log(event.elementDown)
+        console.log(event.elementDown.target)
+      }
+      else { 
+        console.log('Event (' + event.type + '): ')
+        console.log(event)
       }
       break;
     case 'json-console':
